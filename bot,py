@@ -1,0 +1,20 @@
+import os
+import json
+from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
+
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+MINI_APP_URL = os.environ.get("MINI_APP_URL")
+ADMIN_ID = 978942677
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [[InlineKeyboardButton("🛍 Do'konni ochish", web_app=WebAppInfo(url=MINI_APP_URL))]]
+    await update.message.reply_text(
+        "👋 Xush kelibsiz OnBazar ga!\n\nQuyidagi tugmani bosing 👇",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+
+if __name__ == "__main__":
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.run_polling() 
