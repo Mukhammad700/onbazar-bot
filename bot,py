@@ -1,20 +1,19 @@
+from flask import Flask, send_file
+import threading
 import os
-import json
-from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
-MINI_APP_URL = os.environ.get("MINI_APP_URL")
-ADMIN_ID = 978942677
+app = Flask(__name__)
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [[InlineKeyboardButton("🛍 Do'konni ochish", web_app=WebAppInfo(url=MINI_APP_URL))]]
-    await update.message.reply_text(
-        "👋 Xush kelibsiz OnBazar ga!\n\nQuyidagi tugmani bosing 👇",
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
+@app.route('/')
+def index():
+    return send_file('index.html')
 
-if __name__ == "__main__":
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.run_polling() 
+def run_flask():
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
+
+# Flask ni alohida thread da ishga tushir
+thread = threading.Thread(target=run_flask)
+thread.start()
+
+# Bot kodingiz davom etadi...
